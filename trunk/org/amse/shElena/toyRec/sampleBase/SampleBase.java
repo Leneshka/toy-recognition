@@ -54,7 +54,7 @@ public class SampleBase implements ISampleBase {
 		return mySamples.isEmpty();
 	}
 
-	public boolean saveSampleBase(File file) {
+	public void saveSampleBase(File file) {
 		DocumentBuilder builder = null;
 		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -67,7 +67,6 @@ public class SampleBase implements ISampleBase {
 		root.setAttribute("sampleSize", String.valueOf(mySampleSize));
 
 		for (ISample s : mySamples) {
-			// System.out.println(" "+ch);
 			Element e = document.createElement("Character");
 			root.appendChild(e);
 			e.setAttribute("symbol", s.getSymbol().toString());
@@ -88,31 +87,27 @@ public class SampleBase implements ISampleBase {
 			t.setOutputProperty(OutputKeys.INDENT, "yes");
 			t.transform(source, result);
 		} catch (TransformerConfigurationException e) {
-			System.out
-					.println("Symbol base wasn`t saved: TransformerConfigurationException");
-			return false;
+			throw new RuntimeException("Symbol base wasn`t saved.");
 		} catch (TransformerException e) {
-			System.out
-					.println("Symbol base wasn`t saved: TransformerException");
-			return false;
+			throw new RuntimeException("Symbol base wasn`t saved.");
 		}
 
-		return true;
 	}
 
-	public boolean loadSampleBase(File file) {
+	public void loadSampleBase(File file) {
 		Document document = null;
 
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
 					.newDocumentBuilder();
 			document = builder.parse(file);
+
 			if (document != null) {
 				Node root = document.getDocumentElement();
-			
+
 				String sampleSize = root.getAttributes().getNamedItem(
 						"sampleSize").getNodeValue();
-				
+
 				if (Integer.parseInt(sampleSize) != mySampleSize) {
 					throw new WrongSizeException();
 				}
@@ -123,12 +118,12 @@ public class SampleBase implements ISampleBase {
 				for (int i = 0; i < childNumber; ++i) {
 					Node node = children.item(i);
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						
+
 						String symbol = node.getAttributes().getNamedItem(
 								"symbol").getNodeValue();
 						String picture = node.getAttributes().getNamedItem(
 								"picture").getNodeValue();
-					
+
 						ISample s = SampleFactory.parseSample(symbol, picture);
 
 						mySamples.add(s);
@@ -136,26 +131,20 @@ public class SampleBase implements ISampleBase {
 				}
 			}
 		} catch (ParserConfigurationException e) {
-			System.out
-					.println("Symbol base wasn`t loaded: ParserConfigurationException");
-			return false;
+			throw new RuntimeException("Symbol base wasn`t loaded.");
 		} catch (SAXException e) {
-			System.out.println("Symbol base wasn`t loaded: SAXException");
-			return false;
+			throw new RuntimeException("Symbol base wasn`t loaded.");
 		} catch (IOException e) {
-			System.out.println("Symbol base wasn`t loaded: IOException");
-			return false;
+			throw new RuntimeException("Symbol base wasn`t loaded.");
 		} catch (WrongSizeException e) {
-			System.out
-					.println("Symbol base wasn`t loaded: wrong size of samples.");
-			return false;
+			throw new RuntimeException(
+					"Symbol base wasn`t loaded: wrong size of samples.");
 		} catch (RuntimeException e) {
-			System.out
-					.println("Symbol base wasn`t loaded: file contains forbidden symbol.");
-			return false;
+			throw new RuntimeException(
+					"Symbol base wasn`t loaded: file contains forbidden symbol.");
 		}
 		baseChanged();
-		return true;
+
 	}
 
 	public class WrongSizeException extends RuntimeException {
@@ -188,6 +177,10 @@ public class SampleBase implements ISampleBase {
 
 	public int getSampleSize() {
 		return mySampleSize;
+	}
+
+	public void clear() {
+		mySamples.clear();
 	}
 
 }

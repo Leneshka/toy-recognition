@@ -11,17 +11,17 @@ import org.amse.shElena.toyRec.samples.ISample;
 public class AddAction extends AbstractAction {
 	private static final long serialVersionUID = 1L;
 	
-	private View myView;
+	private PaintRecognitionTab myTab;
 
-	public AddAction(View view) {
-		myView = view;
+	public AddAction(PaintRecognitionTab tab) {
+		myTab = tab;
 
 		putValue(AbstractAction.NAME, "Add");
 		putValue(SHORT_DESCRIPTION, "Add a symbol to the base");
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		BufferedImage image = myView.getPaintingPanel().getImage();
+		BufferedImage image = myTab.getPaintingPanel().getImage();
 
 		String letter = JOptionPane
 				.showInputDialog("Please enter a letter you would like to assign this sample to.");
@@ -31,7 +31,7 @@ public class AddAction extends AbstractAction {
 		}
 		
 		if (letter.length() == 0){
-			JOptionPane.showMessageDialog(myView,
+			JOptionPane.showMessageDialog(myTab,
 					"A letter is necessary.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
@@ -39,16 +39,16 @@ public class AddAction extends AbstractAction {
 
 
 		if (letter.length() > 1) {
-			JOptionPane.showMessageDialog(myView,
+			JOptionPane.showMessageDialog(myTab,
 					"Only a single letter is required.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		ISample s = myView.getManager().learnSymbol(letter.charAt(0), image);
-		myView.getListModel().addElement(s);
-		myView.getList().setSelectedIndex(myView.getListModel().getSize() - 1);
-		myView.getPaintingPanel().clear();
+		ISample s = myTab.getManager().learnSymbol(letter.charAt(0), image);
+		myTab.getListModel().addElement(s);
+		myTab.getList().setSelectedIndex(myTab.getListModel().getSize() - 1);
+		myTab.getPaintingPanel().clear();
 	}
 
 }

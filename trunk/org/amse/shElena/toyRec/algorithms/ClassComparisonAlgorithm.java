@@ -78,8 +78,7 @@ public class ClassComparisonAlgorithm implements IAlgorithm {
 		return d;
 	}
 
-	public String getName() {
+	public String toString() {
 		return "Class comparison algorithm";
 	}
-
 }

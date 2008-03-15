@@ -23,7 +23,7 @@ public class KohonenNetworkAlgorithm implements IAlgorithm, Runnable {
 		return myInstance;
 	}
 
-	public String getName() {
+	public String toString() {
 		return "Kohonen network algorithm";
 	}
 

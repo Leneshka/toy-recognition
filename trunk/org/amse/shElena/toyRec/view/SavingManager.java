@@ -1,4 +1,4 @@
-package org.amse.shElena.toyRec.view;
+package ru.amse.shElena.toyRec.view;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -9,7 +9,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import org.amse.shElena.toyRec.samples.ISample;
+import ru.amse.shElena.toyRec.samples.ISample;
 
 public class SavingManager {
 	private View myView;

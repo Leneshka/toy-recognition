@@ -16,29 +16,28 @@ public interface IManager {
 
 	void removeSample(ISample sample);
 
-	boolean saveSymbolBase(File file);
-
-	boolean loadSymbolBase(File file);
-
+	void saveSymbolBase(File file);
+	
+	void setSymbolBase(ISampleBase base);
 	
 	ISampleBase createPictureSymbolBase(File file);
-	ISampleBase createXMLSymbolBase(File file);
+	ISampleBase createFileSymbolBase(File file);
 	
 	void newSymbolBase();
 
-	public ISample makeSample(Character symbol, BufferedImage image);
+	ISample makeSample(Character symbol, BufferedImage image);
 	
-	public void testRecognition(ISampleBase base, List<Character> recognized, List<Character> unrecognized );
+	void testRecognition(ISampleBase base, List<Character> recognized, List<Character> unrecognized );
 
-	public int getWidth();
+	int getWidth();
 
-	public int getHeight();
+	int getHeight();
 	
-	public int getBaseStateID();
+	int getBaseStateID();
 
-	public ISample[] getSamples();
+	ISample[] getSamples();
 	
-	public void setAlgorithm(IAlgorithm algorithm);
+	void setAlgorithm(IAlgorithm algorithm);
 	
-	public IAlgorithm getAlgorithm();
+	IAlgorithm getAlgorithm();
 }

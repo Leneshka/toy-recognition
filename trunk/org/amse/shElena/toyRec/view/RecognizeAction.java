@@ -1,4 +1,4 @@
-package org.amse.shElena.toyRec.view;
+package ru.amse.shElena.toyRec.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -8,8 +8,8 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import org.amse.shElena.toyRec.algorithms.ComparisonResult;
-import org.amse.shElena.toyRec.samples.ISample;
+import ru.amse.shElena.toyRec.algorithms.ComparisonResult;
+import ru.amse.shElena.toyRec.samples.ISample;
 
 public class RecognizeAction extends AbstractAction {
 	private static final long serialVersionUID = 1L;

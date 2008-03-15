@@ -28,15 +28,15 @@ public interface ISampleBase extends Iterable<ISample>{
 	/*
 	 * maybe, exception? No - too much exceptions
 	 */
-	boolean loadSampleBase(File file);
+	void loadSampleBase(File file);
 	
-	boolean saveSampleBase(File file);
+	void saveSampleBase(File file);
 	
 	ISample[] getSamples();
 	
 	int getSampleSize();
 	
-	
+	void clear();
 
 	//boolean enlargeByImageFile(File file);
 }

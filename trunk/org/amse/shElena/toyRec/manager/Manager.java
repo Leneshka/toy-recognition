@@ -16,8 +16,9 @@ import org.amse.shElena.toyRec.samples.SampleFactory;
 
 public class Manager implements IManager {
 	private int myWidth;
+
 	private int myHeight;
-	
+
 	private int myLastLearnedBaseID;
 
 	private ISampleBase myBase;
@@ -38,22 +39,22 @@ public class Manager implements IManager {
 
 	public ISample learnSymbol(Character symbol, BufferedImage image) {
 		ISample sample = makeSample(symbol, image);
-		
+
 		myBase.addSample(sample);
-		
+
 		return sample;
 	}
 
-	public ISample makeSample(Character symbol, BufferedImage image){
+	public ISample makeSample(Character symbol, BufferedImage image) {
 		image = getEssentialRectangle(image);
 
 		return myFactory.makeRelativeSample(symbol, image);
 	}
-	
-	public boolean loadSymbolBase(File file) {
-		myLastLearnedBaseID = Integer.MIN_VALUE;
-		return myBase.loadSampleBase(file);
-	}
+
+	/*
+	 * public void loadSymbolBase(File file) { myLastLearnedBaseID =
+	 * Integer.MIN_VALUE; myBase.loadSampleBase(file); }
+	 */
 
 	public void newSymbolBase() {
 		myBase = new SampleBase(myWidth * myHeight);
@@ -61,11 +62,11 @@ public class Manager implements IManager {
 	}
 
 	public List<ComparisonResult> recognizeImage(BufferedImage image) {
-		if(myLastLearnedBaseID != myBase.getStateID()){
+		if (myLastLearnedBaseID != myBase.getStateID()) {
 			myAlgorithm.learnBase(myBase);
 			myLastLearnedBaseID = myBase.getStateID();
 		}
-		
+
 		image = getEssentialRectangle(image);
 		ISample sample = myFactory.makeRelativeSample(' ', image);
 		return myAlgorithm.getWholeResults(sample.getPicture());
@@ -75,8 +76,8 @@ public class Manager implements IManager {
 		myBase.removeSample(sample);
 	}
 
-	public boolean saveSymbolBase(File file) {
-		return myBase.saveSampleBase(file);
+	public void saveSymbolBase(File file) {
+		myBase.saveSampleBase(file);
 	}
 
 	private BufferedImage getEssentialRectangle(BufferedImage image) {
@@ -92,8 +93,6 @@ public class Manager implements IManager {
 			i++;
 		}
 
-		
-		
 		int rightBorder = 0;
 		int k = image.getWidth() - 1;
 		found = false;
@@ -105,10 +104,8 @@ public class Manager implements IManager {
 			}
 			k--;
 		}
-		
-		
-		
-		int lowerBorder = 0;		
+
+		int lowerBorder = 0;
 		int j = 0;
 		found = false;
 
@@ -119,9 +116,7 @@ public class Manager implements IManager {
 			}
 			j++;
 		}
-		
-		
-		
+
 		int upperBorder = 0;
 		int m = image.getHeight() - 1;
 		found = false;
@@ -155,12 +150,12 @@ public class Manager implements IManager {
 		}
 		return true;
 	}
-	
-	public int getWidth(){
+
+	public int getWidth() {
 		return myWidth;
 	}
-	
-	public int getHeight(){
+
+	public int getHeight() {
 		return myHeight;
 	}
 
@@ -181,30 +176,29 @@ public class Manager implements IManager {
 		return myAlgorithm;
 	}
 
-	public ISampleBase createXMLSymbolBase(File file) {
+	public ISampleBase createFileSymbolBase(File file) {
 		ISampleBase b = new SampleBase(myWidth * myHeight);
 		b.loadSampleBase(file);
 		return b;
 	}
 
+	/**
+	 * Only for directories
+	 */
 	public ISampleBase createPictureSymbolBase(File file) {
 		ISampleBase b = new SampleBase(myWidth * myHeight);
 		
-		if (file != null) {
-			if (!file.isDirectory()) {
-				loadPicture( file, b);
-			} else {
+		if (file != null &&  file.isDirectory()){
 				// f - directory
 				File[] files = file.listFiles();
 				for (File f : files) {
 					loadPicture(f, b);
 				}		
-			}
 		}
 		return b;
-	}	
+	}
 
-	private void loadPicture(File file, ISampleBase base){
+	private void loadPicture(File file, ISampleBase base) {
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(file);
@@ -219,33 +213,42 @@ public class Manager implements IManager {
 		}
 
 		ISample sample = makeSample(filename.charAt(0), image);
-		
+
 		base.addSample(sample);
 	}
 
-	public void testRecognition(ISampleBase base, List<Character> recognized, List<Character> unrecognized) {
-		if(myLastLearnedBaseID != myBase.getStateID()){
-			myAlgorithm.learnBase(base);
+	public void testRecognition(ISampleBase base, List<Character> recognized,
+			List<Character> unrecognized) {
+		if (myLastLearnedBaseID != myBase.getStateID()) {
+			myAlgorithm.learnBase(myBase);
 			myLastLearnedBaseID = myBase.getStateID();
 		}
-		
-		for(ISample s : base){
+
+		for (ISample s : base) {
 			boolean[] pic = s.getPicture();
-			
+
 			List<ComparisonResult> res = myAlgorithm.getWholeResults(pic);
-			if (res.size() == 0) continue;
-			
+			Character real = s.getSymbol();
+
+			if (res.size() == 0) {
+				unrecognized.add(real);
+				continue;
+			}
+
 			Collections.sort(res);
 			Character guess = res.get(0).getSymbol();
-			
-			Character real = s.getSymbol();
-			if (guess == real){
+
+			if (guess == real) {
 				recognized.add(real);
 			} else {
 				unrecognized.add(real);
 			}
 		}
-		
-		
+
+	}
+
+	public void setSymbolBase(ISampleBase base) {
+		myLastLearnedBaseID = Integer.MIN_VALUE;
+		myBase = base;
 	}
 }

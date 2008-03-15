@@ -50,7 +50,7 @@ public class SimpleComparisonAlgorithm implements IAlgorithm {
 		return d;
 	}
 
-	public String getName() {
+	public String toString() {
 		return "Simple comparison algorithm";
 	}
 }

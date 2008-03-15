@@ -27,8 +27,9 @@ public class Main {
 		}*/
 		
 		Manager m = new Manager(5, 7, SimpleComparisonAlgorithm.getInstance());
+		Manager m2 = new Manager(5, 7, SimpleComparisonAlgorithm.getInstance());
 		
-		View v = new View(m);
+		View v = new View(m, m2);
 		
 		v.setVisible(true);
 	}

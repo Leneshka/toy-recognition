@@ -7,18 +7,18 @@ import javax.swing.AbstractAction;
 public class ClearAction extends AbstractAction {
 	private static final long serialVersionUID = 1L;
 
-	private View myView;
+	private PaintRecognitionTab myTab;
 
-	public ClearAction(View view) {
-		myView = view;
+	public ClearAction(PaintRecognitionTab tab) {
+		myTab = tab;
 
 		putValue(AbstractAction.NAME, "Clear");
 		putValue(SHORT_DESCRIPTION, "Clear painting area");
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		myView.getPaintingPanel().clear();
-		myView.getSamplePainter().clear();
-		myView.getSamplePainter().repaint();
+		myTab.getPaintingPanel().clear();
+		myTab.getSamplePainter().clear();
+		myTab.getSamplePainter().repaint();
 	}
 }
