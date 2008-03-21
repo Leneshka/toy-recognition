@@ -31,6 +31,10 @@ public interface ISampleBase extends Iterable<ISample>{
 	void loadSampleBase(File file);
 	
 	void saveSampleBase(File file);
+	/*
+	 * don't forget to check sample size! 
+	 */
+	void addSampleBase(ISampleBase base);
 	
 	ISample[] getSamples();
 	

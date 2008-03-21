@@ -19,11 +19,11 @@ public class ComparisonResult implements Comparable<ComparisonResult> {
 	}
 
 	public int compareTo(ComparisonResult res) {
-		int dif = myDifference - res.getDifference();
+		int dif = myDifference - res.myDifference;
 		if (dif > 0) {
 			return 1;
 		} else if (dif == 0) {
-			return 0;
+			return mySymbol - res.mySymbol;
 		} else {
 			return -1;
 		}

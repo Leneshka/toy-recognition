@@ -19,10 +19,14 @@ public interface IManager {
 	void saveSymbolBase(File file);
 	
 	void setSymbolBase(ISampleBase base);
+//	ISampleBase getSymbolBase();
 	
 	ISampleBase createPictureSymbolBase(File file);
+	ISample createSample(File file);
 	ISampleBase createFileSymbolBase(File file);
 	
+	void addSampleBase(ISampleBase base);
+	void addSample(ISample sample);
 	void newSymbolBase();
 
 	ISample makeSample(Character symbol, BufferedImage image);
@@ -40,4 +44,26 @@ public interface IManager {
 	void setAlgorithm(IAlgorithm algorithm);
 	
 	IAlgorithm getAlgorithm();
+	
+	/**
+	 * If the picture is totaly white, returns 0
+	 * Needed ridhtBorder = leftBorder in this case
+	 */
+	public int getRightBorder(BufferedImage image);
+	/**
+	 * If the picture is totaly white, returns 0
+	 * Needed ridhtBorder = leftBorder in this case
+	 */
+	public  int getLeftBorder(BufferedImage image);
+	/**
+	 * If the picture is totaly white, returns 0
+	 * Needed upperBorder = lowerBorder in this case
+	 */
+	public  int getUpperBorder(BufferedImage image);
+	
+	/**
+	 * If the picture is totaly white, returns 0
+	 * Needed upperBorder = lowerBorder in this case
+	 */
+	public  int getLowerBorder(BufferedImage image);
 }

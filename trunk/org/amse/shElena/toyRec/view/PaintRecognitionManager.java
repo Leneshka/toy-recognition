@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.amse.shElena.toyRec.sampleBase.ISampleBase;
+import org.amse.shElena.toyRec.samples.ISample;
 
 public class PaintRecognitionManager {
 	private PaintRecognitionTab myTab;
@@ -14,15 +15,15 @@ public class PaintRecognitionManager {
 
 	private File mySource;
 
-	private JFileChooser myFileChooser;
-
-	private JFileChooser myDirChooser;
+	private JFileChooser mySaveFileChooser;
+	
+	private JFileChooser myAddFileChooser;
 
 	public PaintRecognitionManager(PaintRecognitionTab tab) {
 		myTab = tab;
 		mySavedStateID = myTab.getManager().getBaseStateID();
 
-		myFileChooser = new JFileChooser();
+		mySaveFileChooser = new JFileChooser();
 		FileFilter filter = new FileFilter() {
 			public boolean accept(File file) {
 				return (file.isDirectory()) || (file.getName().endsWith(".sb"));
@@ -34,26 +35,36 @@ public class PaintRecognitionManager {
 			}
 		};
 
-		myFileChooser.addChoosableFileFilter(filter);
-		myFileChooser.setDialogTitle("Loading...");
-		myFileChooser.setCurrentDirectory(new File("."));
+		mySaveFileChooser.addChoosableFileFilter(filter);
+		mySaveFileChooser.setDialogTitle("Loading...");
+		mySaveFileChooser.setCurrentDirectory(new File("."));
+		
+		myAddFileChooser = new JFileChooser();
+		FileFilter filt = new FileFilter() {
+			public boolean accept(File file) {
+				return (file.isDirectory() || file.getName().endsWith(".sb") || file
+						.getName().endsWith(".bmp"));
+			}
 
-		myDirChooser = new JFileChooser();
+			@Override
+			public String getDescription() {
+				return "All data sources";
+			}
+		};
 
-		myDirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		myDirChooser.setDialogTitle("Choose source...");
-
-		myDirChooser.setCurrentDirectory(new File("."));
-
+		myAddFileChooser.addChoosableFileFilter(filt);
+		myAddFileChooser.setDialogTitle("Add");
+		myAddFileChooser.setMultiSelectionEnabled(true);
+		myAddFileChooser.setCurrentDirectory(new File("."));
 	}
 
 	public void saveAs() {
-		myFileChooser.setVisible(true);
-		int res = myFileChooser.showSaveDialog(myTab);
+		mySaveFileChooser.setVisible(true);
+		int res = mySaveFileChooser.showSaveDialog(myTab);
 
 		if (res == JFileChooser.APPROVE_OPTION) {
 
-			File f = myFileChooser.getSelectedFile();
+			File f = mySaveFileChooser.getSelectedFile();
 			if (f != null) {
 				if (!f.getName().endsWith(".sb")) {
 					f = new File(f.getPath() + ".sb");
@@ -101,58 +112,8 @@ public class PaintRecognitionManager {
 		// myView.updateSaveAction();
 	}
 
-	public void loadFileSymbolBase() {
-		if (mySavedStateID != myTab.getManager().getBaseStateID()) {
-			int result = JOptionPane.showConfirmDialog(myTab, "Save changes?",
-					"Character recognition", JOptionPane.YES_NO_CANCEL_OPTION);
-			if (result == JOptionPane.YES_OPTION) {
-				save();
-			} else if (result == JOptionPane.CANCEL_OPTION) {
-				return;
-			}
-		}
-
-		myFileChooser.setVisible(true);
-		int res = myFileChooser.showOpenDialog(myTab);
-
-		if (res == JFileChooser.APPROVE_OPTION) {
-			File file = myFileChooser.getSelectedFile();
-			if (file != null) {
-				try {
-					ISampleBase base = myTab.getManager().createFileSymbolBase(
-							file);
-					myTab.getManager().setSymbolBase(base);
-					mySource = file;
-					mySavedStateID = myTab.getManager().getBaseStateID();
-					myTab.updateListModel();
-				} catch (RuntimeException e) {
-					JOptionPane.showMessageDialog(myTab, e.getMessage(),
-							"Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Creates base from picture files: from a file or a directory with files
-	 * 
-	 */
-	public void loadPictureSymbolBase() {
-		newSymbolBase();
-
-		myDirChooser.setVisible(true);
-		int res = myDirChooser.showDialog(myTab, "Create");
-
-		if (res == JFileChooser.APPROVE_OPTION) {
-			File f = myDirChooser.getSelectedFile();
-			ISampleBase base = myTab.getManager().createPictureSymbolBase(f);
-			myTab.getManager().setSymbolBase(base);
-			mySource = null;
-			mySavedStateID = Integer.MIN_VALUE;
-			myTab.updateListModel();
-		}
-	}
-
+	
+	
 	public void exit() {
 		if (mySavedStateID != myTab.getManager().getBaseStateID()) {
 			int result = JOptionPane.showConfirmDialog(myTab, "Save changes?",
@@ -165,5 +126,46 @@ public class PaintRecognitionManager {
 		}
 
 		System.exit(0);
+	}
+	
+
+	public void addBase() {
+		File[] files = chooseFile();
+
+		if (files == null) {
+			return;
+		}
+
+		for (File f : files) {
+			addFile(f);
+		}
+	}
+
+	private File[] chooseFile() {
+		myAddFileChooser.setVisible(true);
+		int res = myAddFileChooser.showOpenDialog(myTab);
+
+		if (res != JFileChooser.APPROVE_OPTION) {
+			return null;
+		}
+
+		return myAddFileChooser.getSelectedFiles();
+	}
+
+	private void addFile(File file) {
+		String name = file.getName();
+
+		if (name.endsWith(".sb")) {
+			ISampleBase base = myTab.getManager().createFileSymbolBase(file);
+			myTab.getManager().addSampleBase(base);
+			for (ISample s : base.getSamples()) {
+				myTab.getListModel().addElement(s);
+			}
+		} else if (name.endsWith(".bmp")) {
+			ISample s = myTab.getManager().createSample(file);
+			myTab.getManager().addSample(s);
+			myTab.getListModel().addElement(s);
+
+		}
 	}
 }

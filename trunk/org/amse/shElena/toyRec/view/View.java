@@ -1,16 +1,15 @@
 package org.amse.shElena.toyRec.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import org.amse.shElena.toyRec.manager.IManager;
 
 public class View extends JFrame {
@@ -35,7 +34,6 @@ public class View extends JFrame {
 		setSize(myPaintTab.getWidth(), myPaintTab.getHeight() + 90);
 
 		c.add(tpanel, BorderLayout.CENTER);
-		tpanel.addChangeListener(getChangeListener());
 		setContentPane(c);
 
 		setJMenuBar(myPaintTab.getMenu());
@@ -52,14 +50,11 @@ public class View extends JFrame {
 		};
 		addWindowListener(l);
 	}
-
-	private ChangeListener getChangeListener() {
-		return new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				Tab tab = (Tab) ((JTabbedPane) e.getSource())
-						.getSelectedComponent();
-				setJMenuBar(tab.getMenu());
-			}
-		};
+	
+	public static void setComponentSize(JComponent comp, int width, int height) {
+		Dimension d = new Dimension(width, height);
+		comp.setMaximumSize(d);
+		comp.setMinimumSize(d);
+		comp.setPreferredSize(d);
 	}
 }

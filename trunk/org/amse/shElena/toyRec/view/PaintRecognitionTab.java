@@ -2,34 +2,33 @@ package org.amse.shElena.toyRec.view;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JList;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.amse.shElena.toyRec.algorithms.ClassComparisonAlgorithm;
+import org.amse.shElena.toyRec.algorithms.AlgorithmManager;
 import org.amse.shElena.toyRec.algorithms.IAlgorithm;
-import org.amse.shElena.toyRec.algorithms.KohonenNetworkAlgorithm;
-import org.amse.shElena.toyRec.algorithms.SimpleComparisonAlgorithm;
 import org.amse.shElena.toyRec.manager.IManager;
 import org.amse.shElena.toyRec.samples.ISample;
+import org.amse.shElena.toyRec.view.paintActions.AddSymbolAction;
+import org.amse.shElena.toyRec.view.paintActions.ClearAction;
+import org.amse.shElena.toyRec.view.paintActions.RecognizeSymbolAction;
+import org.amse.shElena.toyRec.view.paintActions.ShowSampleAction;
 
-public class PaintRecognitionTab extends Tab {
+public class PaintRecognitionTab extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private IManager myManager;
@@ -55,12 +54,8 @@ public class PaintRecognitionTab extends Tab {
 		add(createListPanel());
 		add(createPaintPanel());
 
-		// setJMenuBar(createMenuBar());
-
 		setSize(450, 300 + myManager.getHeight() * 10);
-		setComponentSize(this, 450, 300 + myManager.getHeight() * 10);
-
-		// setResizable(false);
+		View.setComponentSize(this, 450, 300 + myManager.getHeight() * 10);
 	}
 
 	private JPanel createPaintPanel() {
@@ -85,9 +80,9 @@ public class PaintRecognitionTab extends Tab {
 
 		mySamplePainter.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		sample.add(mySamplePainter);
-		setComponentSize(mySamplePainter, 10 * myManager.getWidth(),
+		View.setComponentSize(mySamplePainter, 10 * myManager.getWidth(),
 				10 * myManager.getHeight());
-		setComponentSize(sample, 200, 5 + 10 * myManager.getHeight());
+		View.setComponentSize(sample, 200, 5 + 10 * myManager.getHeight());
 
 		panel.add(sample);
 
@@ -104,7 +99,7 @@ public class PaintRecognitionTab extends Tab {
 		JPanel lowPan = new JPanel();
 		lowPan.setLayout(new BoxLayout(lowPan, BoxLayout.X_AXIS));
 
-		JButton add = new JButton(new AddAction(this));
+		JButton add = new JButton(new AddSymbolAction(this));
 		upPan.add(add);
 
 		JButton rec = new JButton(new RecognizeSymbolAction(this));
@@ -119,23 +114,18 @@ public class PaintRecognitionTab extends Tab {
 		panel.add(upPan);
 		panel.add(lowPan);
 
-		setComponentSize(add, 85, 20);
-		setComponentSize(rec, 115, 20);
-		setComponentSize(clear, 85, 20);
-		setComponentSize(show, 115, 20);
-		/*
-		 * setComponentSize(upPan, 200, 20); setComponentSize(lowPan, 200, 20);
-		 * setComponentSize(panel, 200, 40);
-		 */
+		View.setComponentSize(add, 85, 20);
+		View.setComponentSize(rec, 115, 20);
+		View.setComponentSize(clear, 85, 20);
+		View.setComponentSize(show, 115, 20);
 
 		return panel;
 	}
 
-
-
 	private JPanel createListPanel() {
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(new Dimension(200, 400));
+		// panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
 		myList = createList();
 		JScrollPane scroll = new JScrollPane(myList);
@@ -143,31 +133,77 @@ public class PaintRecognitionTab extends Tab {
 
 		panel.add(scroll);
 
-		JButton remove = new JButton(new RemoveAction());
-		remove.setPreferredSize(new Dimension(200, 40));
-		panel.add(remove);
+		JPanel buttons = createListButtonPanel();
+		View.setComponentSize(buttons, 200, 60);
+		panel.add(buttons);
 
-		JPanel algpanel = new JPanel(new GridLayout(0, 1, 0, 0));
-		// algpanel.setBorder(BorderFactory.createTitledBorder("Algorithm"));
-		ButtonGroup bg = new ButtonGroup();
+		JComboBox algs = getAlgComboBox();
+		View.setComponentSize(algs, 200, 20);
+		panel.add(algs);
 
-		final IAlgorithm simple = SimpleComparisonAlgorithm.getInstance();
-		JRadioButton sBut = setRadioButton(simple, algpanel, bg);
+		return panel;
+	}
 
-		sBut.setSelected(true);
-		sBut.setPreferredSize(new Dimension(200, 20));
+	private JComboBox getAlgComboBox() {
+		JComboBox box = new JComboBox(AlgorithmManager.getAlgorithms());
 
-		final IAlgorithm cl = ClassComparisonAlgorithm.getInstance();
-		JRadioButton clBut = setRadioButton(cl, algpanel, bg);
+		ItemListener listener = new ItemListener() {
+			public void itemStateChanged(ItemEvent ev) {
+				if(ev.getStateChange() == ItemEvent.SELECTED){
+					IAlgorithm alg = (IAlgorithm) ev.getItem();
+					myManager.setAlgorithm(alg);
+				}
+			}
+		};
+		//box.add
+		box.addItemListener(listener);
+		
+		box.setSelectedItem(myManager.getAlgorithm());
+		return box;
+	}
 
-		clBut.setPreferredSize(new Dimension(200, 20));
+	private JPanel createListButtonPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		final IAlgorithm kn = KohonenNetworkAlgorithm.getInstance();
-		JRadioButton knBut = setRadioButton(kn, algpanel, bg);
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
 
-		knBut.setPreferredSize(new Dimension(200, 20));
+		JPanel panel2 = new JPanel();
+		panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
 
-		panel.add(algpanel);
+		JButton remove = new JButton(getRemoveSampleAction());
+
+		JButton newBase = new JButton(getNewBaseAction());
+
+		JButton addBase = new JButton(getAddBaseAction());
+
+		JButton saveBase = new JButton(getSaveBaseAction());
+
+		JButton saveBaseAs = new JButton(getSaveBaseAsAction());
+
+		panel1.add(newBase);
+		panel1.add(addBase);
+
+		panel2.add(saveBase);
+		panel2.add(saveBaseAs);
+
+		View.setComponentSize(remove, 200, 20);
+		View.setComponentSize(newBase, 80, 20);
+		View.setComponentSize(addBase, 120, 20);
+		View.setComponentSize(saveBase, 80, 20);
+		View.setComponentSize(saveBaseAs, 120, 20);
+
+		panel.add(panel1);
+		panel.add(panel2);
+		
+		JPanel p = new JPanel();
+		// почему-то это все спасает
+		p.setLayout(new BoxLayout(p, BoxLayout.X_AXIS));
+		p.add(remove);
+		panel.add(p);
+
+		
 
 		return panel;
 	}
@@ -178,28 +214,17 @@ public class PaintRecognitionTab extends Tab {
 		updateListModel();
 
 		JList list = new JList(myListModel);
-		list.addListSelectionListener(new ListListener());
+		ListSelectionListener listener = new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent ev) {
+				ISample sample = (ISample) myList.getSelectedValue();
+
+				mySamplePainter.showSample(sample);
+			}
+		};
+		list.addListSelectionListener(listener);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		return list;
-	}
-
-	private JRadioButton setRadioButton(final IAlgorithm algorithm,
-			JPanel panel, ButtonGroup bg) {
-		JRadioButton but = new JRadioButton();
-		but.setText(algorithm.toString());
-
-		ActionListener l = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				myManager.setAlgorithm(algorithm);
-			}
-		};
-
-		but.addActionListener(l);
-
-		panel.add(but);
-		bg.add(but);
-		return but;
 	}
 
 	public IManager getManager() {
@@ -239,28 +264,76 @@ public class PaintRecognitionTab extends Tab {
 
 	}
 
-	private class ListListener implements ListSelectionListener {
-		public void valueChanged(ListSelectionEvent ev) {
-			ISample sample = (ISample) myList.getSelectedValue();
+	private AbstractAction getRemoveSampleAction() {
+		AbstractAction act = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
 
-			mySamplePainter.showSample(sample);
-		}
+			public void actionPerformed(ActionEvent arg0) {
+				ISample sample = (ISample) myList.getSelectedValue();
+
+				myManager.removeSample(sample);
+				myListModel.removeElement(sample);
+			}
+
+		};
+		act.putValue(AbstractAction.NAME, "Remove sample");
+		act.putValue(AbstractAction.SHORT_DESCRIPTION,
+				"Remove sample of selected symbol");
+		return act;
 	}
 
-	private class RemoveAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
+	private AbstractAction getNewBaseAction() {
+		AbstractAction newBase = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
 
-		public RemoveAction() {
-			putValue(AbstractAction.NAME, "Remove sample");
-			putValue(SHORT_DESCRIPTION, "Remove sample of selected symbol");
-		}
+			public void actionPerformed(ActionEvent arg0) {
+				myPaintRecognitionManager.newSymbolBase();
+			}
+		};
+		newBase.putValue(AbstractAction.NAME, "New");
+		newBase.putValue(AbstractAction.SHORT_DESCRIPTION, "New symbol base");
+		return newBase;
+	}
 
-		public void actionPerformed(ActionEvent arg0) {
-			ISample sample = (ISample) myList.getSelectedValue();
+	private AbstractAction getAddBaseAction() {
+		AbstractAction addBase = new AbstractAction(){
+			private static final long serialVersionUID = 1L;
 
-			myManager.removeSample(sample);
-			myListModel.removeElement(sample);
-		}
+			public void actionPerformed(ActionEvent arg0) {
+				myPaintRecognitionManager.addBase();				
+			}
+			
+		};
+		addBase.putValue(AbstractAction.NAME, "Add base");
+		addBase.putValue(AbstractAction.SHORT_DESCRIPTION, "Add symbol base");
+		return addBase;
+	}
+
+	private AbstractAction getSaveBaseAction() {
+		AbstractAction saveBase = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent arg0) {
+				myPaintRecognitionManager.save();
+			}
+		};
+		saveBase.putValue(AbstractAction.NAME, "Save base");
+		saveBase.putValue(AbstractAction.SHORT_DESCRIPTION, "Save symbol base");
+		return saveBase;
+	}
+
+	private AbstractAction getSaveBaseAsAction() {
+		AbstractAction saveBaseAs = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent arg0) {
+				myPaintRecognitionManager.saveAs();
+			}
+		};
+		saveBaseAs.putValue(AbstractAction.NAME, "Save base as...");
+		saveBaseAs.putValue(AbstractAction.SHORT_DESCRIPTION,
+				"Save symbol base as...");
+		return saveBaseAs;
 	}
 
 	public JMenuBar getMenu() {
@@ -268,97 +341,11 @@ public class PaintRecognitionTab extends Tab {
 			return myMenu;
 		} else {
 			JMenuBar menuBar = new JMenuBar();
-			JMenu baseMenu = new JMenu("Symbol base");
-
-			AbstractAction newBase = new AbstractAction() {
-				private static final long serialVersionUID = 1L;
-
-				public void actionPerformed(ActionEvent arg0) {
-					myPaintRecognitionManager.newSymbolBase();
-				}
-			};
-
-			JMenuItem newSymbolBase = new JMenuItem(newBase);
-			newSymbolBase.setText("New symbol base");
-
-			AbstractAction loadBase = new AbstractAction() {
-				private static final long serialVersionUID = 1L;
-
-				public void actionPerformed(ActionEvent arg0) {
-					myPaintRecognitionManager.loadFileSymbolBase();
-				}
-			};
-
-			JMenuItem load = new JMenuItem(loadBase);
-			load.setText("Load  file base...");
-
-			AbstractAction createBase = new AbstractAction() {
-				private static final long serialVersionUID = 1L;
-
-				public void actionPerformed(ActionEvent arg0) {
-					myPaintRecognitionManager.loadPictureSymbolBase();
-				}
-			};
-
-			JMenuItem create = new JMenuItem(createBase);
-
-			create.setText("Load picture base...");
-
-			AbstractAction saveBase = new AbstractAction() {
-				private static final long serialVersionUID = 1L;
-
-				public void actionPerformed(ActionEvent arg0) {
-					myPaintRecognitionManager.save();
-				}
-			};
-
-			JMenuItem save = new JMenuItem(saveBase);
-
-			save.setText("Save symbol base...");
-
-			AbstractAction saveBaseAs = new AbstractAction() {
-				private static final long serialVersionUID = 1L;
-
-				public void actionPerformed(ActionEvent arg0) {
-					myPaintRecognitionManager.saveAs();
-				}
-			};
-
-			JMenuItem saveAs = new JMenuItem(saveBaseAs);
-
-			saveAs.setText("Save symbol base as...");
-
-			AbstractAction exitAction = new AbstractAction() {
-				private static final long serialVersionUID = 1L;
-
-				public void actionPerformed(ActionEvent arg0) {
-					myPaintRecognitionManager.exit();
-				}
-			};
-
-			JMenuItem exit = new JMenuItem(exitAction);
-
-			exit.setText("Exit");
-
-			baseMenu.add(newSymbolBase);
-			baseMenu.add(load);
-			baseMenu.add(create);
-			baseMenu.addSeparator();
-			baseMenu.add(save);
-			baseMenu.add(saveAs);
-			baseMenu.addSeparator();
-
-			baseMenu.add(exit);
-			menuBar.add(baseMenu);
-
-			myMenu = menuBar;
-
 			return menuBar;
 		}
 	}
-	
-	public PaintRecognitionManager getSavingManager(){
+
+	public PaintRecognitionManager getSavingManager() {
 		return myPaintRecognitionManager;
 	}
-
 }

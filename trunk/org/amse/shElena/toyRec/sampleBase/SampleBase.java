@@ -44,6 +44,16 @@ public class SampleBase implements ISampleBase {
 		mySamples.add(sample);
 		baseChanged();
 	}
+	
+	public void addSampleBase(ISampleBase base) {
+		if(mySampleSize != base.getSampleSize()){
+			return;
+		}
+		
+		for(ISample sample : base.getSamples()){
+			mySamples.add(sample);
+		}
+	}
 
 	public void removeSample(ISample sample) {
 		mySamples.remove(sample);

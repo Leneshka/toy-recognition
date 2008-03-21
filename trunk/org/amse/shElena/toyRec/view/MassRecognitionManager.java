@@ -20,49 +20,41 @@ import org.amse.shElena.toyRec.algorithms.IAlgorithm;
 import org.amse.shElena.toyRec.sampleBase.ISampleBase;
 import org.amse.shElena.toyRec.samples.ISample;
 
-/*
- * Never updates list model
- */
 public class MassRecognitionManager {
 
 	private MassRecognitionTab myTab;
 
 	private ISampleBase myRecBase;
 
-	private JFileChooser myFileChooser;
-
-	private JFileChooser myDirChooser;
+	private JFileChooser myAddFileChooser;
 
 	private JFileChooser mySaveReportChooser;
 
-	private File myLearnFile;
+	private String myLearnFileName;
 
-	private File myRecFile;
+	private String myRecFileName;
 
 	public MassRecognitionManager(MassRecognitionTab tab) {
 		myTab = tab;
 		myRecBase = tab.getManager().createPictureSymbolBase(new File("Vasya"));
 
-		myFileChooser = new JFileChooser();
+		myAddFileChooser = new JFileChooser();
 		FileFilter filter = new FileFilter() {
 			public boolean accept(File file) {
-				return (file.isDirectory()) || (file.getName().endsWith(".sb"));
+				return (file.isDirectory() || file.getName().endsWith(".sb") || file
+						.getName().endsWith(".bmp"));
 			}
 
 			@Override
 			public String getDescription() {
-				return "Symbol base files (.sb)";
+				return "All data sources";
 			}
 		};
 
-		myFileChooser.addChoosableFileFilter(filter);
-		myFileChooser.setDialogTitle("Loading...");
-		myFileChooser.setCurrentDirectory(new File("."));
-
-		myDirChooser = new JFileChooser();
-		myDirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		myDirChooser.setDialogTitle("Choose source...");
-		myDirChooser.setCurrentDirectory(new File("."));
+		myAddFileChooser.addChoosableFileFilter(filter);
+		myAddFileChooser.setDialogTitle("Add");
+		myAddFileChooser.setMultiSelectionEnabled(true);
+		myAddFileChooser.setCurrentDirectory(new File("."));
 
 		mySaveReportChooser = new JFileChooser();
 		mySaveReportChooser
@@ -78,85 +70,94 @@ public class MassRecognitionManager {
 
 	public void newRecBase() {
 		myRecBase.clear();
-		myRecFile = null;
+		myRecFileName = null;
+		myTab.getRecognizeListModel().clear();
 	}
 
 	public void newLearnBase() {
 		myTab.getManager().newSymbolBase();
-		myLearnFile = null;
+		myLearnFileName = null;
+		myTab.getLearnListModel().clear();
 	}
 
+	
+	public void addLearnBase(){
+		File[] files = chooseFile();
 
-	public void loadLearnFileBase() {
-		myFileChooser.setVisible(true);
-		int res = myFileChooser.showOpenDialog(myTab);
+		if (files == null) {
+			return;
+		}
 
-		if (res == JFileChooser.APPROVE_OPTION) {
-			File file = myFileChooser.getSelectedFile();
-			if (file != null) {
-				try {
-					ISampleBase base = myTab.getManager().createFileSymbolBase(
-							file);
-					myTab.getManager().setSymbolBase(base);
-					myLearnFile = file;
-				} catch (RuntimeException e) {
-					JOptionPane.showMessageDialog(myTab, e.getMessage(),
-							"Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
+		for (File f : files) {
+			addLearnFile(f);
+		}
+	}
+	
+	public void addRecBase(){
+		File[] files = chooseFile();
+
+		if (files == null) {
+			return;
+		}
+
+		for (File f : files) {
+			addRecFile(f);
 		}
 	}
 
+	private File[] chooseFile() {
+		myAddFileChooser.setVisible(true);
+		int res = myAddFileChooser.showOpenDialog(myTab);
 
-	public void loadRecFileBase() {
-		myFileChooser.setVisible(true);
-		int res = myFileChooser.showOpenDialog(myTab);
-
-		if (res == JFileChooser.APPROVE_OPTION) {
-			File file = myFileChooser.getSelectedFile();
-			if (file != null) {
-				try {
-					ISampleBase base = myTab.getManager().createFileSymbolBase(
-							file);
-					myRecBase = base;
-					myRecFile = file;
-				} catch (RuntimeException e) {
-					JOptionPane.showMessageDialog(myTab, e.getMessage(),
-							"Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
+		if (res != JFileChooser.APPROVE_OPTION) {
+			return null;
 		}
+
+		return myAddFileChooser.getSelectedFiles();
 	}
 
+	private void addLearnFile(File file) {
+		String name = file.getName();
 
-	public void loadLearnPictureBase() {
-		myDirChooser.setVisible(true);
-		int res = myDirChooser.showDialog(myTab, "Create");
-
-		if (res == JFileChooser.APPROVE_OPTION) {
-			File f = myDirChooser.getSelectedFile();
-			if (f != null && f.isDirectory()) {
-				ISampleBase base = myTab.getManager()
-						.createPictureSymbolBase(f);
-				myTab.getManager().setSymbolBase(base);
-				myLearnFile = f;
+		if (name.endsWith(".sb")) {
+			ISampleBase base = myTab.getManager().createFileSymbolBase(file);
+			myTab.getManager().addSampleBase(base);
+			for (ISample s : base.getSamples()) {
+				myTab.getLearnListModel().addElement(s);
 			}
+		} else if (name.endsWith(".bmp")) {
+			ISample s = myTab.getManager().createSample(file);
+			myTab.getManager().addSample(s);
+			myTab.getLearnListModel().addElement(s);
+		}
+		
+		if(myLearnFileName == null){
+			myLearnFileName = name;
+		} else {
+			myLearnFileName = myLearnFileName + ", " + name;
 		}
 	}
+	
+	private void addRecFile(File file) {
+		String name = file.getName();
 
-
-	public void loadRecPictureBase() {
-		myDirChooser.setVisible(true);
-		int res = myDirChooser.showDialog(myTab, "Create");
-
-		if (res == JFileChooser.APPROVE_OPTION) {
-			File f = myDirChooser.getSelectedFile();
-			if (f != null && f.isDirectory()) {
-				ISampleBase base = myTab.getManager()
-						.createPictureSymbolBase(f);
-				myRecBase = base;
-				myRecFile = f;
+		if (name.endsWith(".sb")) {
+			ISampleBase base = myTab.getManager().createFileSymbolBase(file);
+			myRecBase.addSampleBase(base);
+			for (ISample s : base.getSamples()) {
+				myTab.getRecognizeListModel().addElement(s);
 			}
+		} else if (name.endsWith(".bmp")) {
+			ISample s = myTab.getManager().createSample(file);
+			myRecBase.addSample(s);
+			myTab.getRecognizeListModel().addElement(s);
+
+		}
+		
+		if(myRecFileName == null){
+			myRecFileName = name;
+		} else {
+			myRecFileName = myRecFileName + ", " + name;
 		}
 	}
 
@@ -187,7 +188,7 @@ public class MassRecognitionManager {
 			}
 			myTab.getManager().testRecognition(myRecBase, recList, unrecList);
 
-			report = makeReport(res, myTab);
+			report = makeReport(res);
 		}
 
 		Object[] options = { "OK", "Save report...", "Close" };
@@ -196,11 +197,11 @@ public class MassRecognitionManager {
 				null, options, options[0]);
 
 		if (opt == 1) {
-			save(report, myTab);
+			saveReport(report);
 		}
 	}
 
-	private String makeReport(Map<IAlgorithm, Integer> res, Tab myView) {
+	private String makeReport(Map<IAlgorithm, Integer> res) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("The best result:\n ");
 
@@ -218,13 +219,13 @@ public class MassRecognitionManager {
 			sb.append(entry.getKey() + "   " + entry.getValue() + "\n");
 		}
 
-		sb.append("\nRecognized file  " + myRecFile.getName() + "\n");
-		sb.append("Learned file  " + myLearnFile.getName() + "\n");
+		sb.append("\nRecognized file  " + myRecFileName + "\n");
+		sb.append("Learned file  " + myLearnFileName + "\n");
 		return sb.toString();
 	}
 
-	private void save(String report, Tab myView) {
-		mySaveReportChooser.showDialog(myView, "Save");
+	private void saveReport(String report) {
+		mySaveReportChooser.showDialog(myTab, "Save");
 		mySaveReportChooser.setVisible(true);
 
 		File f = mySaveReportChooser.getSelectedFile();
@@ -250,7 +251,7 @@ public class MassRecognitionManager {
 				wr.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(myView,
+				JOptionPane.showMessageDialog(myTab,
 						"The report wasn`t saved.", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}

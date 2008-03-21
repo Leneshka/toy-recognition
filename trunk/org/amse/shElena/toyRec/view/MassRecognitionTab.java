@@ -1,34 +1,28 @@
 package org.amse.shElena.toyRec.view;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import org.amse.shElena.toyRec.algorithms.ClassComparisonAlgorithm;
+import org.amse.shElena.toyRec.algorithms.AlgorithmManager;
 import org.amse.shElena.toyRec.algorithms.IAlgorithm;
-import org.amse.shElena.toyRec.algorithms.KohonenNetworkAlgorithm;
-import org.amse.shElena.toyRec.algorithms.SimpleComparisonAlgorithm;
 import org.amse.shElena.toyRec.manager.IManager;
-import org.amse.shElena.toyRec.samples.ISample;
 
-public class MassRecognitionTab extends Tab {
+public class MassRecognitionTab extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private IManager myManager;
 
-	// private SamplePainter mySamplePainter;
-	
 	private MassRecognitionManager myMassRecognitionManager;
 
 	private DefaultListModel myLearnListModel;
@@ -37,102 +31,239 @@ public class MassRecognitionTab extends Tab {
 
 	private DefaultListModel myAlgorithmListModel;
 
-	private JMenuBar myMenu;
-	
-	private List<IAlgorithm> myAlgorithms;
-	
 	private final int MY_WIDTH = 100;
 
 	public MassRecognitionTab(IManager manager) {
 		myManager = manager;
-		myAlgorithms = new ArrayList<IAlgorithm>();
-		myAlgorithms.add(SimpleComparisonAlgorithm.getInstance());
-		myAlgorithms.add(ClassComparisonAlgorithm.getInstance());
-		myAlgorithms.add(KohonenNetworkAlgorithm.getInstance());
-		
-		myMassRecognitionManager = new MassRecognitionManager(this);
-		
-		JPanel learn = createLearnPanel();
-		setComponentSize(learn, MY_WIDTH, 720);
-		add(learn);
-		
-		JPanel rec = createRecognizePanel();
-		setComponentSize(rec, MY_WIDTH, 720);
-		add(rec);
-		
-		JPanel alg = createAlgorithmPanel();
-		setComponentSize(alg, 2*MY_WIDTH, 720);
-		add(alg);
-		
-		// setJMenuBar(createMenuBar());
 
-		//setSize(450, 300 + myManager.getHeight() * 10);
+		myMassRecognitionManager = new MassRecognitionManager(this);
+
+		JPanel learn = createLearnPanel();
+		View.setComponentSize(learn, MY_WIDTH, 720);
+		add(learn);
+
+		JPanel rec = createRecognizePanel();
+		View.setComponentSize(rec, MY_WIDTH, 720);
+		add(rec);
+
+		JPanel alg = createAlgorithmPanel();
+		View.setComponentSize(alg, 2 * MY_WIDTH, 720);
+		add(alg);
+
+		// setSize(450, 300 + myManager.getHeight() * 10);
 		// setComponentSize(this, 450, 300 + myManager.getHeight() * 10);
 	}
 
 	public IManager getManager() {
 		return myManager;
 	}
-	
+
 	private JPanel createLearnPanel() {
 		JPanel panel = new JPanel();
+		JLabel lab = new JLabel("Learn base");
+		View.setComponentSize(lab, MY_WIDTH, 15);
+		panel.add(lab);
 		JScrollPane scroll = new JScrollPane(createLearnList());
 
-		setComponentSize(scroll, MY_WIDTH, 320);
+		View.setComponentSize(scroll, MY_WIDTH, 260);
 		panel.add(scroll);
-		
-		//JButton learn = new JButton(/*new RemoveAction()*/);
-		//panel.add(learn);
-		//setComponentSize(learn, MY_WIDTH, 20);
+
+		panel.add(createLearnButtons());
 
 		return panel;
+	}
+
+	private JPanel createLearnButtons() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		JButton newBase = new JButton(getNewLearnBaseAction());
+		panel.add(newBase);
+
+		JButton add = new JButton(getAddLearnBaseAction());
+		panel.add(add);
+
+		View.setComponentSize(add, MY_WIDTH, 20);
+		View.setComponentSize(newBase, MY_WIDTH, 20);
+
+		return panel;
+	}
+
+	private JPanel createRecButtons() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		JButton newBase = new JButton(getNewRecBaseAction());
+		panel.add(newBase);
+
+		JButton add = new JButton(getAddRecBaseAction());
+		panel.add(add);
+
+		View.setComponentSize(add, MY_WIDTH, 20);
+		View.setComponentSize(newBase, MY_WIDTH, 20);
+
+		return panel;
+	}
+
+	private AbstractAction getAddLearnBaseAction() {
+		AbstractAction addBase = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent arg0) {
+				myMassRecognitionManager.addLearnBase();
+			}
+
+		};
+		addBase.putValue(AbstractAction.NAME, "Add base");
+		addBase.putValue(AbstractAction.SHORT_DESCRIPTION, "Add symbol base");
+		return addBase;
+	}
+
+	private AbstractAction getAddRecBaseAction() {
+		AbstractAction addBase = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent arg0) {
+				myMassRecognitionManager.addRecBase();
+			}
+
+		};
+		addBase.putValue(AbstractAction.NAME, "Add base");
+		addBase.putValue(AbstractAction.SHORT_DESCRIPTION, "Add symbol base");
+		return addBase;
+	}
+
+	private AbstractAction getNewLearnBaseAction() {
+		AbstractAction newBase = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent arg0) {
+				myMassRecognitionManager.newLearnBase();
+			}
+		};
+		newBase.putValue(AbstractAction.NAME, "New");
+		newBase.putValue(AbstractAction.SHORT_DESCRIPTION, "New symbol base");
+		return newBase;
+	}
+
+	private AbstractAction getNewRecBaseAction() {
+		AbstractAction newBase = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent arg0) {
+				myMassRecognitionManager.newRecBase();
+			}
+		};
+		newBase.putValue(AbstractAction.NAME, "New");
+		newBase.putValue(AbstractAction.SHORT_DESCRIPTION, "New symbol base");
+		return newBase;
 	}
 
 	private JPanel createRecognizePanel() {
 		JPanel panel = new JPanel();
+		JLabel lab = new JLabel("Recognition base");
+		View.setComponentSize(lab, MY_WIDTH, 15);
+		panel.add(lab);
 		JScrollPane scroll = new JScrollPane(createRecList());
 
-		setComponentSize(scroll, MY_WIDTH, 320);
+		View.setComponentSize(scroll, MY_WIDTH, 260);
 		panel.add(scroll);
-		
-		//JButton recognize = new JButton(/*new RemoveAction()*/);
-		//panel.add(recognize);
-		//setComponentSize(recognize, MY_WIDTH, 20);
+
+		panel.add(createRecButtons());
 
 		return panel;
 	}
-	
+
 	private JPanel createAlgorithmPanel() {
 		JPanel panel = new JPanel();
+
+		JLabel lab = new JLabel("Tested algorithms");
+		View.setComponentSize(lab, 2 * MY_WIDTH, 15);
+		panel.add(lab);
+
 		JScrollPane scroll = new JScrollPane(createAlgList());
-	
-		setComponentSize(scroll, 2*MY_WIDTH, 320);
+
+		View.setComponentSize(scroll, 2 * MY_WIDTH, 200);
 		panel.add(scroll);
 
-		
+		panel.add(createAlgorithmsControl());
 
-		AbstractAction recognize = new AbstractAction() {
+		JButton rec = new JButton(getTestRecognitionAction());
+		rec.setText("Test recognition");
+		panel.add(rec);
+		View.setComponentSize(rec, 2 * MY_WIDTH, 20);
+
+		return panel;
+	}
+
+	private JPanel createAlgorithmsControl() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		final JComboBox box = new JComboBox(AlgorithmManager.getAlgorithms());
+
+		AbstractAction addAlg = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent arg0) {
+				Object alg = box.getSelectedItem();
+				if (!myAlgorithmListModel.contains(alg)) {
+					myAlgorithmListModel.addElement(alg);
+				}
+			}
+
+		};
+
+		addAlg.putValue(AbstractAction.NAME, "+");
+		addAlg.putValue(AbstractAction.SHORT_DESCRIPTION,
+				"Add algorithm to tested ones");
+
+		JPanel butPanel = new JPanel();
+		butPanel.setLayout(new BoxLayout(butPanel, BoxLayout.X_AXIS));
+		JButton add = new JButton(addAlg);
+		butPanel.add(add);
+
+		AbstractAction removeAlg = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent arg0) {
+				Object alg = box.getSelectedItem();
+				myAlgorithmListModel.removeElement(alg);
+			}
+
+		};
+
+		removeAlg.putValue(AbstractAction.NAME, "-");
+		removeAlg.putValue(AbstractAction.SHORT_DESCRIPTION,
+				"Remove algorithm from tested ones");
+		JButton remove = new JButton(removeAlg);
+		butPanel.add(remove);
+
+		View.setComponentSize(add, MY_WIDTH, 20);
+		View.setComponentSize(remove, MY_WIDTH, 20);
+
+		panel.add(box);
+		panel.add(butPanel);
+
+		return panel;
+	}
+
+	private AbstractAction getTestRecognitionAction() {
+		return new AbstractAction() {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent arg0) {
 				IAlgorithm[] ar = new IAlgorithm[myAlgorithmListModel.size()];
 				int i = 0;
-				for(Object alg : myAlgorithmListModel.toArray()){
+				for (Object alg : myAlgorithmListModel.toArray()) {
 					ar[i] = (IAlgorithm) alg;
 					i++;
 				}
 				myMassRecognitionManager.testRecognition(ar);
 			}
-		};		
-		
-		JButton rec = new JButton(recognize);
-		rec.setText("Test recognition");
-		panel.add(rec);
-		setComponentSize(rec, 2*MY_WIDTH, 20);
-		
-		return panel;
+		};
 	}
-	
+
 	private JList createLearnList() {
 		myLearnListModel = new DefaultListModel();
 		JList list = new JList(myLearnListModel);
@@ -140,7 +271,7 @@ public class MassRecognitionTab extends Tab {
 
 		return list;
 	}
-	
+
 	private JList createRecList() {
 		myRecListModel = new DefaultListModel();
 		JList list = new JList(myRecListModel);
@@ -148,7 +279,7 @@ public class MassRecognitionTab extends Tab {
 
 		return list;
 	}
-	
+
 	private JList createAlgList() {
 		myAlgorithmListModel = new DefaultListModel();
 		JList list = new JList(myAlgorithmListModel);
@@ -157,148 +288,11 @@ public class MassRecognitionTab extends Tab {
 		return list;
 	}
 
-	public void updateListModel(DefaultListModel listModel, ISample[] samples) {
-		listModel.clear();
-		for (ISample s : samples) {
-			listModel.addElement(s);
-		}
+	public DefaultListModel getLearnListModel() {
+		return myLearnListModel;
 	}
 
-	@Override
-	public JMenuBar getMenu() {
-		if (myMenu != null) {
-			return myMenu;
-		} else {
-			JMenuBar menuBar = new JMenuBar();
-			
-			menuBar.add(getLearnMenu());
-			
-			menuBar.add(getRecognizeMenu());
-			
-			menuBar.add(getAlgorithmMenu());
-			
-			myMenu = menuBar;
-
-			return menuBar;
-		}
-	}
-	
-	private JMenu getLearnMenu(){
-		JMenu baseMenu = new JMenu("Learn base");
-
-		AbstractAction newBase = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent arg0) {
-				myMassRecognitionManager.newLearnBase();
-				updateListModel(myLearnListModel, myManager.getSamples());
-			}
-		};
-
-		JMenuItem newSymbolBase = new JMenuItem(newBase);
-		newSymbolBase.setText("New symbol base");
-
-		AbstractAction loadFileBase = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent arg0) {
-				myMassRecognitionManager.loadLearnFileBase();
-				updateListModel(myLearnListModel, myManager.getSamples());
-			}
-		};
-		
-
-		JMenuItem loadFile = new JMenuItem(loadFileBase);
-		loadFile.setText("Load  file base...");
-
-		AbstractAction loadPictureBase = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent arg0) {
-				myMassRecognitionManager.loadLearnPictureBase();
-				updateListModel(myLearnListModel, myManager.getSamples());
-			}
-		};
-
-		JMenuItem loadPicture = new JMenuItem(loadPictureBase);
-
-		loadPicture.setText("Load picture base...");
-
-		baseMenu.add(newSymbolBase);
-		baseMenu.add(loadFile);
-		baseMenu.add(loadPicture);
-		return baseMenu;
-	}
-	
-	private JMenu getRecognizeMenu(){
-		JMenu baseMenu = new JMenu("Recognize base");
-
-		AbstractAction newBase = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent arg0) {
-				myMassRecognitionManager.newRecBase();
-				updateListModel(myRecListModel, myMassRecognitionManager.getRecSamples());
-			}
-		};
-
-		JMenuItem newSymbolBase = new JMenuItem(newBase);
-		newSymbolBase.setText("New symbol base");
-
-		AbstractAction loadFileBase = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent arg0) {
-				myMassRecognitionManager.loadRecFileBase();
-				updateListModel(myRecListModel, myMassRecognitionManager.getRecSamples());
-			}
-		};
-		
-
-		JMenuItem loadFile = new JMenuItem(loadFileBase);
-		loadFile.setText("Load  file base...");
-
-		AbstractAction loadPictureBase = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent arg0) {
-				myMassRecognitionManager.loadRecPictureBase();
-				updateListModel(myRecListModel, myMassRecognitionManager.getRecSamples());
-			}
-		};
-
-		JMenuItem loadPicture = new JMenuItem(loadPictureBase);
-
-		loadPicture.setText("Load picture base...");
-
-		baseMenu.add(newSymbolBase);
-		baseMenu.add(loadFile);
-		baseMenu.add(loadPicture);
-		return baseMenu;
-	}
-	
-	private JMenu getAlgorithmMenu(){
-		JMenu baseMenu = new JMenu("Algorithms");
-
-		for(final IAlgorithm alg : myAlgorithms){
-			AbstractAction algAction = new AbstractAction() {
-				private static final long serialVersionUID = 1L;
-
-				public void actionPerformed(ActionEvent arg0) {
-					if(myAlgorithmListModel.contains(alg)){
-						myAlgorithmListModel.removeElement(alg);
-					} else {
-						myAlgorithmListModel.addElement(alg);
-					}
-				}
-			};
-
-			JMenuItem item = new JMenuItem(algAction);
-			item.setText(alg.toString());
-			
-			baseMenu.add(item);
-		}
-		
-		return baseMenu;
+	public DefaultListModel getRecognizeListModel() {
+		return myRecListModel;
 	}
 }

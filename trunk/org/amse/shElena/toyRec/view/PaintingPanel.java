@@ -16,11 +16,25 @@ import javax.swing.event.MouseInputListener;
 
 public class PaintingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private static final int MY_STROKE = 3;;
-	
+
+	private static final int MY_STROKE = 3;
+	private static final int MY_RECTANGLE_STROKE = 1;
+
+
 	private Collection<Point> myPoints;
 
+	private int myRightRectangleBound;
+
+	private int myLeftRectangleBound;
+
+	private int myLowerRectangleBound;
+
+	private int myUpperRectangleBound;
+
+	private boolean myPaintRedRectangle;
+
 	public PaintingPanel() {
+		myPaintRedRectangle = false;
 		myPoints = new LinkedList<Point>();
 		setBackground(Color.white);
 
@@ -65,6 +79,16 @@ public class PaintingPanel extends JPanel {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
+		if (myPaintRedRectangle) {
+			g.setColor(Color.red);
+			((Graphics2D) g).setStroke(new BasicStroke(MY_RECTANGLE_STROKE));
+			g.drawRect(myLeftRectangleBound, myLowerRectangleBound,
+					myRightRectangleBound - myLeftRectangleBound,
+					myUpperRectangleBound - myLowerRectangleBound);
+
+		}
+		
 		g.setColor(Color.black);
 		((Graphics2D) g).setStroke(new BasicStroke(MY_STROKE));
 		Iterator<Point> it = myPoints.iterator();
@@ -86,6 +110,7 @@ public class PaintingPanel extends JPanel {
 
 	public void clear() {
 		myPoints.clear();
+		myPaintRedRectangle = false;
 		repaint();
 	}
 
@@ -95,5 +120,14 @@ public class PaintingPanel extends JPanel {
 		Graphics g = image.getGraphics();
 		paintComponent(g);
 		return image;
+	}
+
+	public void paintRedRectangle(int right, int left, int upper, int lower) {
+		myLeftRectangleBound = left;
+		myLowerRectangleBound = lower;
+		myRightRectangleBound = right;
+		myUpperRectangleBound = upper;
+		myPaintRedRectangle = true;
+		repaint();
 	}
 }

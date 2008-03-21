@@ -81,56 +81,71 @@ public class Manager implements IManager {
 	}
 
 	private BufferedImage getEssentialRectangle(BufferedImage image) {
-		int leftBorder = 0;
-		int i = 0;
-		boolean found = false;
+		int right = getRightBorder(image);
+		int left = getLeftBorder(image);
+		int upper = getUpperBorder(image);
+		int lower = getLowerBorder(image);
+		return image.getSubimage(left, lower, right - left, upper - lower);
+	}
 
-		while (!found && i < image.getWidth()) {
+	/**
+	 * If the picture is totaly white, returns 0 Needed ridhtBorder = leftBorder
+	 * in this case
+	 */
+	public int getRightBorder(BufferedImage image) {
+		int i = image.getWidth() - 1;
+		while (i > 0) {
 			if (!columnIsWhite(i, image)) {
-				found = true;
-				leftBorder = i;
+				return i;
+			}
+			i--;
+		}
+		return 0;
+	}
+
+	/**
+	 * If the picture is totaly white, returns 0 Needed ridhtBorder = leftBorder
+	 * in this case
+	 */
+	public int getLeftBorder(BufferedImage image) {
+		int i = 0;
+		while (i < image.getWidth()) {
+			if (!columnIsWhite(i, image)) {
+				return i;
 			}
 			i++;
 		}
+		return 0;
+	}
 
-		int rightBorder = 0;
-		int k = image.getWidth() - 1;
-		found = false;
-
-		while (!found && k > -1) {
-			if (!columnIsWhite(k, image)) {
-				found = true;
-				rightBorder = k;
-			}
-			k--;
-		}
-
-		int lowerBorder = 0;
-		int j = 0;
-		found = false;
-
-		while (!found && j < image.getHeight()) {
+	/**
+	 * If the picture is totaly white, returns 0 Needed upperBorder =
+	 * lowerBorder in this case
+	 */
+	public int getUpperBorder(BufferedImage image) {
+		int j = image.getHeight() - 1;
+		while (j > 0) {
 			if (!rowIsWhite(j, image)) {
-				found = true;
-				lowerBorder = j;
+				return j;
+			}
+			j--;
+		}
+		return 0;
+	}
+
+	/**
+	 * If the picture is totaly white, returns 0 Needed upperBorder =
+	 * lowerBorder in this case
+	 */
+	public int getLowerBorder(BufferedImage image) {
+		int j = 0;
+		while (j < image.getHeight()) {
+			if (!rowIsWhite(j, image)) {
+				return j;
 			}
 			j++;
 		}
-
-		int upperBorder = 0;
-		int m = image.getHeight() - 1;
-		found = false;
-
-		while (!found && m > -1) {
-			if (!rowIsWhite(m, image)) {
-				found = true;
-				upperBorder = m;
-			}
-			m--;
-		}
-
-		return image.getSubimage(leftBorder, lowerBorder, rightBorder
-				- leftBorder + 1, upperBorder - lowerBorder + 1);
+		return 0;
 	}
 
 	private boolean rowIsWhite(int number, BufferedImage image) {
@@ -182,18 +197,36 @@ public class Manager implements IManager {
 		return b;
 	}
 
+	public ISample createSample(File file) {
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(file);
+		} catch (IOException e) {
+			return null;
+		}
+
+		String filename = file.getName();
+
+		if (filename.length() == 0 || image == null) {
+			return null;
+		}
+
+		ISample sample = makeSample(filename.charAt(0), image);
+		return sample;
+	}
+
 	/**
 	 * Only for directories
 	 */
 	public ISampleBase createPictureSymbolBase(File file) {
 		ISampleBase b = new SampleBase(myWidth * myHeight);
-		
-		if (file != null &&  file.isDirectory()){
-				// f - directory
-				File[] files = file.listFiles();
-				for (File f : files) {
-					loadPicture(f, b);
-				}		
+
+		if (file != null && file.isDirectory()) {
+			// f - directory
+			File[] files = file.listFiles();
+			for (File f : files) {
+				loadPicture(f, b);
+			}
 		}
 		return b;
 	}
@@ -215,6 +248,15 @@ public class Manager implements IManager {
 		ISample sample = makeSample(filename.charAt(0), image);
 
 		base.addSample(sample);
+	}
+
+	public ISampleBase getSymbolBase() {
+		return myBase;
+	}
+
+	public void setSymbolBase(ISampleBase base) {
+		myLastLearnedBaseID = Integer.MIN_VALUE;
+		myBase = base;
 	}
 
 	public void testRecognition(ISampleBase base, List<Character> recognized,
@@ -247,8 +289,11 @@ public class Manager implements IManager {
 
 	}
 
-	public void setSymbolBase(ISampleBase base) {
-		myLastLearnedBaseID = Integer.MIN_VALUE;
-		myBase = base;
+	public void addSampleBase(ISampleBase base) {
+		myBase.addSampleBase(base);
+	}
+
+	public void addSample(ISample sample) {
+		myBase.addSample(sample);
 	}
 }
