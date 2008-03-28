@@ -1,0 +1,44 @@
+The best result:
+ Class comparison algorithm
+
+All results
+Kohonen network algorithm   70
+Simple comparison algorithm   70
+Class comparison algorithm   90
+
+Recognized file  Ex3.sb
+Learned file  Ex1.sb, Ex2.sb
+ 
+The best result:
+ Kohonen network algorithm
+Simple comparison algorithm
+Class comparison algorithm
+
+All results
+Kohonen network algorithm   75
+Simple comparison algorithm   75
+Class comparison algorithm   75
+
+Recognized file  Ex1.sb, Ex3.sb
+Learned file  Ex2.sb
+
+All results
+Simple comparison algorithm   70
+Class comparison algorithm   90
+My Kohonen network algorithm   70
+
+Recognized file  Ex2.sb
+Learned file  Ex1.sb, Ex3.sb
+ 
+The best result:
+ Simple comparison algorithm
+Class comparison algorithm
+My Kohonen network algorithm
+
+All results
+Simple comparison algorithm   75
+Class comparison algorithm   75
+My Kohonen network algorithm   75
+
+Recognized file  Ex1.sb, Ex2.sb
+Learned file  Ex3.sb

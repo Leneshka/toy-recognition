@@ -1,0 +1,12 @@
+The best result:
+ Simple comparison algorithm
+My Kohonen network algorithm
+
+All results
+Simple comparison algorithm   68
+My Class Kohonen network algorithm   34
+My Kohonen network algorithm   68
+Class comparison algorithm   65
+
+Recognized file  Ex3.sb, numerals, set4
+Learned file  Ex1.sb, Ex2.sb, ciphers,  set3

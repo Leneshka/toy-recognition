@@ -1,0 +1,26 @@
+The best result:
+ Kohonen network algorithm
+Simple comparison algorithm
+Class comparison algorithm
+
+All results
+Kohonen network algorithm   40
+Simple comparison algorithm   40
+Class comparison algorithm   40
+
+Recognized file  Ex3.sb
+Learned file  0 Arial.bmp,
+ 
+The best result:
+ Kohonen network algorithm
+Simple comparison algorithm
+
+All results
+Kohonen network algorithm   50
+Simple comparison algorithm   50
+Class comparison algorithm   40
+
+Recognized file  Ex3.sb
+Learned file  0 Arial.bmp, 0.bmp, 
+The best result:
+ Class comparison algorithm                       

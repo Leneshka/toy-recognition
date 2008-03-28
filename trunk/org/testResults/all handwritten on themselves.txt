@@ -1,0 +1,12 @@
+The best result:
+ Simple comparison algorithm
+My Kohonen network algorithm
+
+All results
+Simple comparison algorithm   100
+My Class Kohonen network algorithm   44
+My Kohonen network algorithm   100
+Class comparison algorithm   76
+
+Recognized file  0 set4.bmp, 1 set4.bmp, 2 set4.bmp, 4 set4.bmp, 5 set4.bmp, 6 set4.bmp, 7 set4.bmp, 8 set4.bmp, 9 set4.bmp, 0 set3.bmp, 1 set3.bmp, 2 set3.bmp, 3 set3.bmp, 4 set3.bmp, 5 set3.bmp, 6 set3.bmp, 7 set3.bmp, 8 set3.bmp, 9 set3.bmp, 0 numerals.bmp, 1 numerals.bmp, 2 numerals.bmp, 3 numerals.bmp, 4 numerals.bmp, 5 numerals.bmp, 6 numerals.bmp, 7 numerals.bmp, 8 numerals.bmp, 9 numerals.bmp, 0 ciphers.bmp, 1 ciphers.bmp, 2 ciphers.bmp, 3 ciphers.bmp, 4 ciphers.bmp, 5 ciphers.bmp, 6 ciphers.bmp, 7 ciphers.bmp, 8 ciphers.bmp, 9 ciphers.bmp, Ex1.sb, Ex2.sb, Ex3.sb
+Learned file  0 ciphers.bmp, 1 ciphers.bmp, 2 ciphers.bmp, 3 ciphers.bmp, 4 ciphers.bmp, 5 ciphers.bmp, 6 ciphers.bmp, 7 ciphers.bmp, 8 ciphers.bmp, 9 ciphers.bmp, 0 numerals.bmp, 1 numerals.bmp, 2 numerals.bmp, 3 numerals.bmp, 4 numerals.bmp, 5 numerals.bmp, 6 numerals.bmp, 7 numerals.bmp, 8 numerals.bmp, 9 numerals.bmp, 0 set3.bmp, 1 set3.bmp, 2 set3.bmp, 3 set3.bmp, 4 set3.bmp, 5 set3.bmp, 6 set3.bmp, 7 set3.bmp, 8 set3.bmp, 9 set3.bmp, 0 set4.bmp, 1 set4.bmp, 2 set4.bmp, 4 set4.bmp, 5 set4.bmp, 6 set4.bmp, 7 set4.bmp, 8 set4.bmp, 9 set4.bmp, Ex1.sb, Ex1.sb, Ex2.sb, Ex3.sb

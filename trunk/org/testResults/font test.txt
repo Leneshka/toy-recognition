@@ -1,0 +1,89 @@
+The best result:
+ Kohonen network algorithm
+Simple comparison algorithm
+Class comparison algorithm
+
+All results
+Kohonen network algorithm   85
+Simple comparison algorithm   85
+Class comparison algorithm   85
+
+Recognized file  0 TNR.bmp, 0.bmp,
+Learned file  0 Arial.bmp
+ 
+The best result:
+ Kohonen network algorithm
+Simple comparison algorithm
+Class comparison algorithm
+
+All results
+Kohonen network algorithm   80
+Simple comparison algorithm   80
+Class comparison algorithm   80
+
+Recognized file  0 Arial.bmp,
+Learned file  0 TNR.bmp, 0.bmp, 
+
+The best result:
+ My Kohonen network algorithm
+Class comparison algorithm
+Simple comparison algorithm
+
+All results
+My Kohonen network algorithm   70
+Class comparison algorithm   70
+Simple comparison algorithm   70
+
+Recognized file  0 Arial.bmp,
+Learned file  0.bmp
+ 
+The best result:
+ My Kohonen network algorithm
+Class comparison algorithm
+Simple comparison algorithm
+
+All results
+My Kohonen network algorithm   60
+Class comparison algorithm   60
+Simple comparison algorithm   60
+
+Recognized file  0 Arial.bmp, 
+Learned file  0 TNR.bmp,
+ 
+The best result:
+ My Kohonen network algorithm
+Class comparison algorithm
+Simple comparison algorithm
+
+All results
+My Kohonen network algorithm   70
+Class comparison algorithm   70
+Simple comparison algorithm   70
+
+Recognized file  0 Arial.bmp,
+Learned file  0.bmp,  
+The best result:
+ My Kohonen network algorithm
+Class comparison algorithm
+Simple comparison algorithm
+
+All results
+My Kohonen network algorithm   80
+Class comparison algorithm   80
+Simple comparison algorithm   80
+
+Recognized file  0 TNR.bmp, 
+Learned file  0 Arial.bmp,
+ 
+The best result:
+ My Kohonen network algorithm
+Class comparison algorithm
+Simple comparison algorithm
+
+All results
+My Kohonen network algorithm   90
+Class comparison algorithm   90
+Simple comparison algorithm   90
+
+Recognized file  0.bmp,
+Learned file  0 Arial.bmp,
