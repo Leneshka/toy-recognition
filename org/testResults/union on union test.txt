@@ -1,0 +1,12 @@
+The best result:
+ Simple comparison algorithm
+My Kohonen network algorithm
+
+All results
+Simple comparison algorithm   100
+My Class Kohonen network algorithm   21
+My Kohonen network algorithm   100
+Class comparison algorithm   79
+
+Recognized file  0 Arial.bmp, 0 ciphers.bmp, 0 numerals.bmp, 0 set3.bmp, 0 set4.bmp, 0 TNR.bmp, 0 TNR2.bmp, 1 Arial.bmp, 1 ciphers.bmp, 1 numerals.bmp, 1 set3.bmp, 1 set4.bmp, 1 TNR.bmp, 1 TNR2.bmp, 2 Arial.bmp, 2 ciphers.bmp, 2 numerals.bmp, 2 set3.bmp, 2 set4.bmp, 2 TNR.bmp, 2 TNR2.bmp, 3 Arial.bmp, 3 ciphers.bmp, 3 numerals.bmp, 3 set3.bmp, 3 TNR.bmp, 3 TNR2.bmp, 4 Arial.bmp, 4 ciphers.bmp, 4 numerals.bmp, 4 set3.bmp, 4 set4.bmp, 4 TNR.bmp, 4 TNR2.bmp, 5 Arial.bmp, 5 ciphers.bmp, 5 numerals.bmp, 5 set3.bmp, 5 set4.bmp, 5 TNR.bmp, 5 TNR2.bmp, 6 Arial.bmp, 6 ciphers.bmp, 6 numerals.bmp, 6 set3.bmp, 6 set4.bmp, 6 TNR.bmp, 6 TNR2.bmp, 7 Arial.bmp, 7 ciphers.bmp, 7 numerals.bmp, 7 set3.bmp, 7 set4.bmp, 7 TNR.bmp, 7 TNR2.bmp, 8 Arial.bmp, 8 ciphers.bmp, 8 numerals.bmp, 8 set3.bmp, 8 set4.bmp, 8 TNR.bmp, 8 TNR2.bmp, 9 Arial.bmp, 9 ciphers.bmp, 9 numerals.bmp, 9 set3.bmp, 9 set4.bmp, 9 TNR.bmp, 9 TNR2.bmp
+Learned file  0 Arial.bmp, 0 ciphers.bmp, 0 numerals.bmp, 0 set3.bmp, 0 set4.bmp, 0 TNR.bmp, 0 TNR2.bmp, 1 Arial.bmp, 1 ciphers.bmp, 1 numerals.bmp, 1 set3.bmp, 1 set4.bmp, 1 TNR.bmp, 1 TNR2.bmp, 2 Arial.bmp, 2 ciphers.bmp, 2 numerals.bmp, 2 set3.bmp, 2 set4.bmp, 2 TNR.bmp, 2 TNR2.bmp, 3 Arial.bmp, 3 ciphers.bmp, 3 numerals.bmp, 3 set3.bmp, 3 TNR.bmp, 3 TNR2.bmp, 4 Arial.bmp, 4 ciphers.bmp, 4 numerals.bmp, 4 set3.bmp, 4 set4.bmp, 4 TNR.bmp, 4 TNR2.bmp, 5 Arial.bmp, 5 ciphers.bmp, 5 numerals.bmp, 5 set3.bmp, 5 set4.bmp, 5 TNR.bmp, 5 TNR2.bmp, 6 Arial.bmp, 6 ciphers.bmp, 6 numerals.bmp, 6 set3.bmp, 6 set4.bmp, 6 TNR.bmp, 6 TNR2.bmp, 7 Arial.bmp, 7 ciphers.bmp, 7 numerals.bmp, 7 set3.bmp, 7 set4.bmp, 7 TNR.bmp, 7 TNR2.bmp, 8 Arial.bmp, 8 ciphers.bmp, 8 numerals.bmp, 8 set3.bmp, 8 set4.bmp, 8 TNR.bmp, 8 TNR2.bmp, 9 Arial.bmp, 9 ciphers.bmp, 9 numerals.bmp, 9 set3.bmp, 9 set4.bmp, 9 TNR.bmp, 9 TNR2.bmp
