@@ -1,0 +1,1 @@
+A programm for testing symbol recognition algorithms.
